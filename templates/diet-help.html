@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet Help</title>
+    <!-- Bootstrap 5 CDN links-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Include CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Upload Your Fast Glucose Test Report</h1>
+    <form id="uploadForm" action="{{ url_for('diet_help') }}" method="POST" enctype="multipart/form-data" class="p-4 border rounded bg-light">
+        <div class="mb-3">
+            <label for="report" class="form-label">Upload PDF/PNG file:</label>
+            <input type="file" name="report" id="report" class="form-control" accept=".pdf, .png, .jpg" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Submit</button>
+    </form>
+    
+    <div id="output" class="mt-5">
+        {% if result %}
+        <div class="alert alert-success">
+            <h4>Your Detected Blood Sugar Level: {{ result.blood_sugar_level }} mg/dL</h4>
+            <p>Category: <b>{{ result.category }}</b></p>
+            
+            <h5>Dietary Recommendations:</h5>
+            <h6>Foods to Include:</h6>
+            <ul>
+                {% for food, reason in result.diet_plan['Food to include'].items() %}
+                <li><strong>{{ food }}:</strong> {{ reason }}</li>
+                {% endfor %}
+            </ul>
+            
+            <h6>Foods to Avoid:</h6>
+            <ul>
+                {% for food, reason in result.diet_plan['Food to avoid'].items() %}
+                <li><strong>{{ food }}:</strong> {{ reason }}</li>
+                {% endfor %}
+            </ul>
+            
+            <h6>Lifestyle Changes:</h6>
+            <ul>
+                {% for change, reason in result.diet_plan['Lifestyle changes'].items() %}
+                <li><strong>{{ change }}:</strong> {{ reason }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS CDN Links -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
